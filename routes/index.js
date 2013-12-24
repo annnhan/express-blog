@@ -1,5 +1,6 @@
 
 var crypto = require('crypto'),
+    fs = require('fs'),
     User = require('../models/user.js'),
     Post = require('../models/post.js');
 
@@ -17,7 +18,6 @@ module.exports = function(app) {
                 error: req.flash('error').toString()
             });
         });
-
     });
 
     app.get('/reg', checkNotLogin);
@@ -127,6 +127,32 @@ module.exports = function(app) {
         req.session.user = null;
         req.flash('success', '登出成功');
         res.redirect('/');
+    });
+
+    app.get('/upload', checkLogin);
+    app.get('/upload', function (req, res) {
+         res.render('upload', {
+             user: req.session.user,
+             title: '上传',
+             success: req.flash('success').toString(),
+             error: req.flash('error').toString()
+         });
+    });
+    app.post('/upload', checkLogin);
+    app.post('/upload', function (req, res) {
+        for (var i in req.files) {
+            if (req.files[i].size == 0) {
+                //使用同步方法删除一个文件
+                fs.unlinkSync(req.files[i].path);
+                console.log('Successfully removed an empty file!')
+            } else {
+                var target_path = './public/images/' + req.files[i].name;
+                //使用同步方法移动文件
+                fs.renameSync(req.files[i].path, target_path);
+            }
+        }
+        req.flash('success', '文件上传成功!');
+        res.redirect('/upload');
     });
 
     function checkLogin(req, res, next) {
