@@ -10,7 +10,7 @@ module.exports = function(app) {
                 posts = [];
             }
             res.render('index', {
-                title: '主页',
+                title: 'n-blog',
                 user: req.session.user,
                 posts: posts,
                 success: req.flash('success').toString(),
