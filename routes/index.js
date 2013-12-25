@@ -16,7 +16,7 @@ module.exports = function(app) {
                 posts: posts,
                 success: req.flash('success').toString(),
                 error: req.flash('error').toString()
-            });
+                });
         });
     });
 
