@@ -1,10 +1,11 @@
 var mongodb = require('./db'),
     markdown = require('markdown').markdown;
 
-function Post(name, title, post) {
+function Post(name, title, tags, post) {
     this.name = name;
     this.title = title;
     this.post = post;
+    this.tags = tags;
     this.comments = [];
 }
 
@@ -28,6 +29,7 @@ Post.prototype.save = function (callback) {
         name: this.name,
         title: this.title,
         post: this.post,
+        tags: this.tags,
         comments: this.comments,
         time: time
     }
@@ -248,6 +250,29 @@ Post.getArchive = function(callback) {
                     }
                     callback(null, docs);
                 });
+        });
+    });
+};
+
+//返回所有标签
+Post.getTags = function(callback) {
+    mongodb.open(function (err, db) {
+        if (err) {
+            return callback(err);
+        }
+        db.collection('posts', function (err, collection) {
+            if (err) {
+                mongodb.close();
+                return callback(err);
+            }
+            //distinct 用来找出给定键的所有不同值
+            collection.distinct("tags", function (err, docs) {
+                mongodb.close();
+                if (err) {
+                    return callback(err);
+                }
+                callback(null, docs);
+            });
         });
     });
 };
