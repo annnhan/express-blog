@@ -12,16 +12,6 @@ module.exports = function (app) {
             if (err) {
                 posts = [];
             }
-            console.log({
-                title: 'n-blog',
-                user: req.session.user,
-                posts: posts,
-                page: page,
-                isFirstPage: (page - 1) == 0,
-                isLastPage: ((page - 1) * 10 + posts.length) == total,
-                success: req.flash('success').toString(),
-                error: req.flash('error').toString()
-            });
             res.render('index', {
                 title: 'n-blog',
                 user: req.session.user,
@@ -272,7 +262,6 @@ module.exports = function (app) {
     app.get('/remove/:name/:day/:title', checkLogin);
     app.get('/remove/:name/:day/:title', function (req, res) {
         var params = req.params;
-        console.log(params);
         Post.remove(params.name, params.day, params.title, function (err) {
             if (err) {
                 req.flash('error', err);
