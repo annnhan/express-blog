@@ -13,7 +13,7 @@ module.exports = function (app) {
                 posts = [];
             }
             res.render('index', {
-                title: 'n-blog',
+                title: 'nnn',
                 user: req.session.user,
                 posts: posts,
                 page: page,
